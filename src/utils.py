@@ -1,5 +1,5 @@
 import numpy as np
-import math, scipy, pygame
+import math, scipy
 
 def round_up_to_even(f):
     return int(math.ceil(f / 2.) * 2)

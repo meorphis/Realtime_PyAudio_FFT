@@ -4,8 +4,8 @@ from collections import deque
 from scipy.signal import savgol_filter
 from numpy_ringbuffer import RingBuffer
 
-from src.fft import getFFT
-from src.utils import *
+from stream_analyzer.src.fft import getFFT
+from stream_analyzer.src.utils import *
 
 class Stream_Analyzer:
     """
@@ -21,9 +21,9 @@ class Stream_Analyzer:
     """
 
     def __init__(self,
-        rate   = 48000,
+        rate   = 96000,
         FFT_window_size_ms  = 50,
-        updates_per_second  = 100,
+        updates_per_second  = 10,
         smoothing_length_ms = 50,
         n_frequency_bins    = 51):
 
@@ -101,7 +101,7 @@ class Stream_Analyzer:
         #Equalize pink noise spectrum falloff:
         self.fft = self.fft * self.power_normalization_coefficients
         self.num_ffts += 1
-        self.fft_fps  = self.num_ffts / (time.time() - self.stream_reader.stream_start_time)
+        # self.fft_fps  = self.num_ffts / (time.time() - self.stream_reader.stream_start_time)
 
         if self.smoothing_length_ms > 0:
             self.feature_buffer.append_data(self.fft)
@@ -123,11 +123,11 @@ class Stream_Analyzer:
 
         return
 
-    def update_buffer(self, in_data):
-        self.data_buffer.append_data(np.frombuffer(in_data, dtype=np.float32))
+    def append_data(self, in_data):
+        self.data_buffer.append_data(in_data)
         self.buffer_is_updated = True
 
-    def get_audio_features(self, in_data):
+    def get_audio_features(self):
         if self.buffer_is_updated:
             self.update_features()
             self.update_rolling_stats()
