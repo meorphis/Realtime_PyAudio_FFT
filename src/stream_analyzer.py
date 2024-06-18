@@ -4,8 +4,8 @@ from collections import deque
 from scipy.signal import savgol_filter
 from numpy_ringbuffer import RingBuffer
 
-from stream_analyzer.src.fft import getFFT
-from stream_analyzer.src.utils import *
+from .fft import getFFT
+from .utils import *
 
 class Stream_Analyzer:
     """
